@@ -348,9 +348,10 @@ class ServerlessS3Local {
     const eventHandlers = [];
 
     this.service.getAllFunctions().forEach((functionKey) => {
-      const functionDefinition = this.service.getFunction(functionKey);
+      const functionDef = this.service.getFunction(functionKey);
+      const functionDefinition = {...functionDef, handler: `.webpack/service/${functionDef.handler}`};
       lambda._create(functionKey, functionDefinition); // eslint-disable-line no-underscore-dangle
-
+      
       const func = (s3Event) => {
         const baseEnvironment = {
           IS_LOCAL: true,
